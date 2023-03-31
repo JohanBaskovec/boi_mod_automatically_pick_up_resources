@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>Automatically pick up resources</name>
+    <directory>automatically_pick_up_resources</directory>
+    <description>Pick up coins, hearts etc. automatically.</description>
+    <version>0.1</version>
+    <visibility>Public</visibility>
+    <tag id="Tweaks"/>
+</metadata>
