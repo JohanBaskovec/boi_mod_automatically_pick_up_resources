@@ -5,7 +5,9 @@
     <id>2955667690</id>
     <description>Instantly pick up items and open unlocked chests in the room with a single keypress. It works by teleporting the items to the player, but only if the items could be reached without taking damage (it won't teleport items behind rocks or spikes).
 
-By default, the pickup of resources is activated by the C key on a keyboard, or Left stick + Right trigger on an Xbox controller. The controls can be modified using the mod "Mod Config Menu Pure".
+By default, the pickup of resources is activated by the C key on a keyboard, or Left stick button on an Xbox controller. This can be configured using the mod &quot;Mod Config Menu Pure&quot;.
+
+https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787
 
 These items are teleported:
 - until limit of 99 is reached: penny, double, nickel, dime, lucky and golden coins ; single and double bombs ; single and double keys.
@@ -14,7 +16,7 @@ These items are teleported:
 It only opens normal unlocked chests, the others are ignored.
 
 All other items are NOT teleported, this includes batteries, charged keys, eternal, bone and rotten hearts.</description>
-    <version>0.5</version>
+    <version>0.6</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
