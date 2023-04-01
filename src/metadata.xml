@@ -3,7 +3,9 @@
     <name>Pick up resources with one keypress</name>
     <directory>pick up resources with one keypress</directory>
     <id>2955667690</id>
-    <description>Instantly pick up items and open unlocked chests in the room by pressing the Shoot left + Drop keys at the same time. It works by teleporting the items to the player, but only if the items could be reached without taking damage (it won't teleport items behind rocks or spikes).
+    <description>Instantly pick up items and open unlocked chests in the room with a single keypress. It works by teleporting the items to the player, but only if the items could be reached without taking damage (it won't teleport items behind rocks or spikes).
+
+By default, the pickup of resources is activated by the C key on a keyboard, or Left stick + Right trigger on an Xbox controller. The controls can be modified using the mod "Mod Config Menu Pure".
 
 These items are teleported:
 - until limit of 99 is reached: penny, double, nickel, dime, lucky and golden coins ; single and double bombs ; single and double keys.
@@ -12,7 +14,7 @@ These items are teleported:
 It only opens normal unlocked chests, the others are ignored.
 
 All other items are NOT teleported, this includes batteries, charged keys, eternal, bone and rotten hearts.</description>
-    <version>0.4</version>
+    <version>0.5</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>

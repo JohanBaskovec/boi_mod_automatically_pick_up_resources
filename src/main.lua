@@ -1,19 +1,125 @@
--- Teleport resources in the room to the player and open chests when pressing the Shoot left and Drop buttons.
--- Teleport these items: all normal coins (penny, nickel, dime), normal bombs and keys (until limit of 99),
--- golden bombs and keys, all cards, all pills, all bags, normal hearts (halfs, full, double), soul hearts, black hearts
--- Open all normal chests, ignore others
--- Items that are not teleported: everything else (batteries, charged keys, eternal, bone and rotten hearts...)
+local json = require("json")
 local mod = RegisterMod("Pick up resources with one keypress", 1)
 
-lastPickUpResourcesAction = 0
+defaultSettings = {
+    keyboardKey = Keyboard.KEY_C
+}
+
+settings = defaultSettings
+
+local function saveSettings()
+    local jsonString = json.encode(settings)
+    mod:SaveData(jsonString)
+end
+
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, saveSettings)
+
+local function loadSettings()
+    local jsonString = mod:LoadData()
+    settings = json.decode(jsonString)
+    if settings.keyboardKey < -1 or settings.keyboardKey > 348 then
+        error("Invalid keyboard key")
+    end
+end
+
+local function initializeSettings()
+    if not mod:HasData() then
+        settings = defaultSettings
+        return
+    end
+
+    if not pcall(loadSettings) then
+        settings = defaultSettings
+        Isaac.DebugString("Error: Failed to load " .. mod.Name .. " settings, reverting to default settings.")
+    end
+end
+
+initializeSettings()
+
+local function setupMyModConfigMenuSettings()
+    if ModConfigMenu == nil then
+        return
+    end
+
+    ModConfigMenu.AddSetting(
+            mod.Name,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.KEYBIND_KEYBOARD,
+                CurrentSetting = function()
+                    return settings.keyboardKey
+                end,
+                Default = Keyboard.KEY_C,
+                Display = function()
+                    currentValue = settings.keyboardKey
+                    key = "None"
+
+                    if currentValue > -1 then
+                        key = "Unknown Key"
+
+                        if InputHelper.KeyboardToString[currentValue] then
+                            key = InputHelper.KeyboardToString[currentValue]
+                        end
+                    end
+                    return "Pick up resources: " .. (key) .. ' (keyboard)'
+                end,
+                OnChange = function(newValue)
+                    if not newValue then
+                        newValue = -1
+                    end
+                    settings.keyboardKey = newValue
+                end,
+                Info = {
+                    "The keyboard key tp pick up resources in the room",
+                },
+                PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL,
+                PopupWidth = 280,
+                Popup = function()
+                    local currentValue = settings.keyboardKey
+
+                    local goBackString = "back"
+                    if ModConfigMenu.Config.LastBackPressed then
+                        if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
+                            goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
+                        elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
+                            goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
+                        end
+                    end
+
+                    local keepSettingString = ""
+                    if currentValue > -1 then
+                        local currentSettingString = 'unknown'
+                        if (InputHelper.KeyboardToString[currentValue]) then
+                            currentSettingString = InputHelper.KeyboardToString[currentValue]
+                        end
+
+                        keepSettingString = "This setting is currently set to \"" ..
+                                currentSettingString .. "\".$newlinePress this button to keep it unchanged.$newline$newline"
+                    end
+
+                    local deviceString = "keyboard"
+
+                    return "Press a button on your " ..
+                            deviceString ..
+                            " to change this setting.$newline$newline" ..
+                            keepSettingString .. "Press \"" .. goBackString .. "\" to go back and clear this setting."
+                end
+            }
+    )
+end
+
+setupMyModConfigMenuSettings()
+
 buttonsPressedLast = false
 buttonsPressed = false
+BUTTON_STICK_LEFT = 10
 
 local function pickUpResources(player)
     controllerIndex = player.ControllerIndex
 
     -- Player must release the buttons and press them again to do the action
-    buttonsPressed = Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, controllerIndex) and Input.IsActionPressed(ButtonAction.ACTION_DROP, controllerIndex)
+    buttonsPressed = Input.IsButtonPressed(settings.keyboardKey, controllerIndex) or
+            (Input.IsActionPressed(ButtonAction.ACTION_DROP, controllerIndex) and Input.IsButtonPressed(BUTTON_STICK_LEFT, controllerIndex))
     if not buttonsPressed then
         buttonsPressedLast = false
         return
@@ -123,7 +229,7 @@ end
 
 local function onPostUpdate()
     nPlayers = Game():GetNumPlayers()
-    for i=0, nPlayers do
+    for i = 0, nPlayers do
         player = Game():GetPlayer(i)
         pickUpResources(player)
     end
