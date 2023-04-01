@@ -9,9 +9,11 @@ lastPickUpResourcesAction = 0
 buttonsPressedLast = false
 buttonsPressed = false
 
-local function pickUpResources()
+local function pickUpResources(player)
+    controllerIndex = player.ControllerIndex
+
     -- Player must release the buttons and press them again to do the action
-    buttonsPressed = Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, 0) and Input.IsActionPressed(ButtonAction.ACTION_DROP, 0)
+    buttonsPressed = Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, controllerIndex) and Input.IsActionPressed(ButtonAction.ACTION_DROP, controllerIndex)
     if not buttonsPressed then
         buttonsPressedLast = false
         return
@@ -23,7 +25,6 @@ local function pickUpResources()
 
     local room = Game():GetRoom()
 
-    player = Game():GetPlayer(0)
     -- Only allow in empty room to prevent accidentally triggering picking up an item and playing the pickup animation
     -- and to prevent "cheating" (for example teleporting a heart from the other side on the room that could save your life)
     if room:IsClear() then
@@ -50,9 +51,14 @@ local function pickUpResources()
             if pickUpEntity ~= nil and (not pickUpEntity:IsShopItem()) and (temporaryEntity.Pathfinder:HasPathToPos(player.Position, true) or player.CanFly) then
                 teleport = false
                 if entity.Variant == PickupVariant.PICKUP_COIN then
-                    if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_LUCKYPENNY then
+                    if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_LUCKYPENNY or entity.SubType == CoinSubType.COIN_GOLDEN then
                         if nCoins < 99 then
                             nCoins = nCoins + 1
+                            teleport = true
+                        end
+                    elseif entity.SubType == CoinSubType.COIN_DOUBLEPACK then
+                        if nCoins < 98 then
+                            nCoins = nCoins + 2
                             teleport = true
                         end
                     elseif entity.SubType == CoinSubType.COIN_NICKEL then
@@ -115,4 +121,12 @@ local function pickUpResources()
     end
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, pickUpResources)
+local function onPostUpdate()
+    nPlayers = Game():GetNumPlayers()
+    for i=0, nPlayers do
+        player = Game():GetPlayer(i)
+        pickUpResources(player)
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, onPostUpdate)
