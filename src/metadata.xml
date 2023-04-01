@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>Automatically pick up resources</name>
-    <directory>automatically_pick_up_resources</directory>
-    <description>Pick up coins, hearts etc. automatically.</description>
-    <version>0.1</version>
+    <name>Pick up resources with one keypress</name>
+    <directory>pick up resources with one keypress</directory>
+    <id>2955667690</id>
+    <description>Instantly pick up items and open unlocked chests in the room by pressing the Shoot left + Drop keys at the same time. It works by teleporting the items to the player, but only if the items could be reached without taking damage (it won't teleport items behind rocks or spikes).
+
+These items are teleported: all normal coins (penny, nickel, dime), lucky coins, normal bombs and keys (until limit of 99), golden bombs and keys, all cards, all pills, all bags, normal hearts, soul hearts, black hearts.
+
+It only opens normal unlocked chests, the others are ignored.
+
+All other items are NOT teleported, this includes batteries, charged keys, eternal, bone and rotten hearts.</description>
+    <version>0.2</version>
     <visibility>Public</visibility>
+    <tag id="Lua"/>
     <tag id="Tweaks"/>
 </metadata>
