@@ -21,7 +21,7 @@ Controller.BUTTON_START = 15
 
 defaultSettings = {
     keyboardKey = Keyboard.KEY_C,
-    controllerButtons = { Controller.STICK_LEFT, Controller.TRIGGER_RIGHT }
+    controllerButtons = { Controller.STICK_LEFT, -1 }
 }
 
 settings = defaultSettings
@@ -39,7 +39,7 @@ local function loadSettings()
     if settings.keyboardKey == nil or settings.keyboardKey < -1 or settings.keyboardKey > 348 then
         error("Invalid keyboard key")
     end
-    for i = 1, 2 do
+    for i = 1, 1 do
         if settings.controllerButtons[i] == nil or settings.controllerButtons[i] < -1 or settings.controllerButtons[i] > 15 then
             error("Invalid controllerButton0")
         end
@@ -134,7 +134,7 @@ local function setupMyModConfigMenuSettings()
             }
     )
 
-    for i = 1, 2 do
+    for i = 1, 1 do
         ModConfigMenu.AddSetting(
                 mod.Name,
                 nil,
@@ -155,7 +155,7 @@ local function setupMyModConfigMenuSettings()
                             end
                         end
 
-                        displayString = "Pick up resources: " .. key .. " (controller button n°" .. tostring(i) .. ')'
+                        displayString = "Pick up resources: " .. key .. " (controller)"
                         return displayString
                     end,
                     OnChange = function(newValue)
@@ -217,7 +217,7 @@ local function pickUpResources(player)
     keyboardButtonPressed = Input.IsButtonPressed(settings.keyboardKey, controllerIndex)
 
     controllerButtonsPressed = true
-    for i = 1, 2 do
+    for i = 1, 1 do
         controllerButtonPressed = settings.controllerButtons[i] == -1 or Input.IsButtonPressed(settings.controllerButtons[i], controllerIndex)
         if not controllerButtonPressed then
             controllerButtonsPressed = false
