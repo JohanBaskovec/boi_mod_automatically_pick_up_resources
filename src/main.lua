@@ -19,7 +19,7 @@ Controller.STICK_RIGHT = 13
 Controller.BUTTON_BACK = 14
 Controller.BUTTON_START = 15
 
-defaultSettings = {
+local defaultSettings = {
     keyboardKey = Keyboard.KEY_C,
     controllerButtons = { Controller.STICK_LEFT, -1 },
     openChests = true,
@@ -33,7 +33,7 @@ defaultSettings = {
     pickUpBags = true
 }
 
-settings = defaultSettings
+local settings = defaultSettings
 
 local function saveSettings()
     local jsonString = json.encode(settings)
@@ -376,17 +376,17 @@ end
 
 setupMyModConfigMenuSettings()
 
-buttonsPressedLast = false
-buttonsPressed = false
-BUTTON_STICK_LEFT = 10
+local buttonsPressedLast = false
+local buttonsPressed = false
+local BUTTON_STICK_LEFT = 10
 
 local function pickUpResources(player)
-    controllerIndex = player.ControllerIndex
+    local controllerIndex = player.ControllerIndex
 
     -- Player must release the buttons and press them again to do the action
-    keyboardButtonPressed = Input.IsButtonPressed(settings.keyboardKey, controllerIndex)
+    local keyboardButtonPressed = Input.IsButtonPressed(settings.keyboardKey, controllerIndex)
 
-    controllerButtonsPressed = true
+    local controllerButtonsPressed = true
     for i = 1, 1 do
         controllerButtonPressed = settings.controllerButtons[i] == -1 or Input.IsButtonPressed(settings.controllerButtons[i], controllerIndex)
         if not controllerButtonPressed then
@@ -422,21 +422,21 @@ local function pickUpResources(player)
                 Game():GetRoom():GetSpawnSeed() -- Seed (the "GetSpawnSeed()" function gets a reproducible seed based on the room, e.g. "2496979501")
         )                       :ToNPC()
 
-        entities = room:GetEntities()
-        nCoins = player:GetNumCoins()
-        maxCoins = 99
+        local entities = room:GetEntities()
+        local nCoins = player:GetNumCoins()
+        local maxCoins = 99
         if player:HasCollectible(CollectibleType.COLLECTIBLE_DEEP_POCKETS) then
             maxCoins = 999
         end
-        nBombs = player:GetNumBombs()
-        nKeys = player:GetNumKeys()
-        nHearts = player:GetHearts()
-        maxHearts = player:GetEffectiveMaxHearts()
-        nSoulHearts = player:GetSoulHearts()
-        heartLimit = player:GetHeartLimit()
+        local nBombs = player:GetNumBombs()
+        local nKeys = player:GetNumKeys()
+        local nHearts = player:GetHearts()
+        local maxHearts = player:GetEffectiveMaxHearts()
+        local nSoulHearts = player:GetSoulHearts()
+        local heartLimit = player:GetHeartLimit()
 
         for i, entity in ipairs(Isaac.GetRoomEntities()) do
-            pickUpEntity = entity:ToPickup()
+            local pickUpEntity = entity:ToPickup()
             temporaryEntity.Position = Vector(entity.Position.X, entity.Position.Y)
             if pickUpEntity ~= nil and (not pickUpEntity:IsShopItem()) and (temporaryEntity.Pathfinder:HasPathToPos(player.Position, true) or player.CanFly) then
                 teleport = false
@@ -549,7 +549,7 @@ local function pickUpResources(player)
 end
 
 local function onPostUpdate()
-    nPlayers = Game():GetNumPlayers()
+    local nPlayers = Game():GetNumPlayers()
     for i = 0, nPlayers do
         player = Game():GetPlayer(i)
         pickUpResources(player)
