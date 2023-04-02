@@ -21,7 +21,16 @@ Controller.BUTTON_START = 15
 
 defaultSettings = {
     keyboardKey = Keyboard.KEY_C,
-    controllerButtons = { Controller.STICK_LEFT, -1 }
+    controllerButtons = { Controller.STICK_LEFT, -1 },
+    openChests = true,
+    pickUpCoins = true,
+    pickUpPills = true,
+    pickUpCards = true,
+    pickUpBombs = true,
+    pickUpKeys = true,
+    pickUpRedHearts = true,
+    pickUpSoulHearts = true,
+    pickUpBags = true
 }
 
 settings = defaultSettings
@@ -36,12 +45,19 @@ mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, saveSettings)
 local function loadSettings()
     local jsonString = mod:LoadData()
     settings = json.decode(jsonString)
-    if settings.keyboardKey == nil or settings.keyboardKey < -1 or settings.keyboardKey > 348 then
+    if settings.keyboardKey < -1 or settings.keyboardKey > 348 then
         error("Invalid keyboard key")
     end
     for i = 1, 1 do
         if settings.controllerButtons[i] == nil or settings.controllerButtons[i] < -1 or settings.controllerButtons[i] > 15 then
             error("Invalid controllerButton0")
+        end
+    end
+
+    -- newly added settings are set to default value
+    for k, v in pairs(defaultSettings) do
+        if settings[k] == nil then
+            settings[k] = defaultSettings[k]
         end
     end
 end
@@ -201,6 +217,160 @@ local function setupMyModConfigMenuSettings()
                     end
                 }
         )
+
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpCoins
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpCoins
+                        return "Pick up coins? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpCoins = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpKeys
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpKeys
+                        return "Pick up keys?" .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpKeys = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpBombs
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpBombs
+                        return "Pick up bombs? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpBombs = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpPills
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpPills
+                        return "Pick up pills? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpPills = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpCards
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpCards
+                        return "Pick up cards? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpCards = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpRedHearts
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpRedHearts
+                        return "Pick up red hearts? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpRedHearts = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpSoulHearts
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpSoulHearts
+                        return "Pick up soul hearts? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpSoulHearts = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpBags
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpBags
+                        return "Pick up bags? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpBags = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                mod.Name,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.openChests
+                    end,
+                    Display = function()
+                        currentValue = settings.openChests
+                        return "Open unlocked chests? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.openChests = newValue
+                    end,
+                }
+        )
     end
 end
 
@@ -265,15 +435,12 @@ local function pickUpResources(player)
         nSoulHearts = player:GetSoulHearts()
         heartLimit = player:GetHeartLimit()
 
-        print("hearts" .. nHearts)
-        print("max hearts" .. maxHearts)
-        print(player:GetHeartLimit())
         for i, entity in ipairs(Isaac.GetRoomEntities()) do
             pickUpEntity = entity:ToPickup()
             temporaryEntity.Position = Vector(entity.Position.X, entity.Position.Y)
             if pickUpEntity ~= nil and (not pickUpEntity:IsShopItem()) and (temporaryEntity.Pathfinder:HasPathToPos(player.Position, true) or player.CanFly) then
                 teleport = false
-                if entity.Variant == PickupVariant.PICKUP_COIN then
+                if entity.Variant == PickupVariant.PICKUP_COIN and settings.pickUpCoins then
                     if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_LUCKYPENNY or entity.SubType == CoinSubType.COIN_GOLDEN then
                         if nCoins < maxCoins then
                             nCoins = nCoins + 1
@@ -295,7 +462,7 @@ local function pickUpResources(player)
                             teleport = true
                         end
                     end
-                elseif entity.Variant == PickupVariant.PICKUP_BOMB then
+                elseif entity.Variant == PickupVariant.PICKUP_BOMB and settings.pickUpBombs then
                     if entity.SubType == BombSubType.BOMB_NORMAL then
                         if nBombs < 99 then
                             nBombs = nBombs + 1
@@ -309,7 +476,7 @@ local function pickUpResources(player)
                     elseif entity.SubType == BombSubType.BOMB_GOLDEN then
                         teleport = true
                     end
-                elseif entity.Variant == PickupVariant.PICKUP_KEY then
+                elseif entity.Variant == PickupVariant.PICKUP_KEY and settings.pickUpKeys then
                     -- ignore charged keys
                     if entity.SubType == KeySubType.KEY_NORMAL then
                         if nKeys < 99 then
@@ -325,46 +492,50 @@ local function pickUpResources(player)
                     elseif entity.SubType == KeySubType.KEY_GOLDEN then
                         teleport = true
                     end
-                elseif entity.Variant == PickupVariant.PICKUP_GRAB_BAG or entity.Variant == PickupVariant.PICKUP_PILL or entity.Variant == PickupVariant.PICKUP_TAROTCARD then
+                elseif entity.Variant == PickupVariant.PICKUP_GRAB_BAG and settings.pickUpBags then
+                    teleport = true
+                elseif entity.Variant == PickupVariant.PICKUP_PILL and settings.pickUpPills then
+                    teleport = true
+                elseif entity.Variant == PickupVariant.PICKUP_TAROTCARD and settings.pickUpCards then
                     teleport = true
                 elseif entity.Variant == PickupVariant.PICKUP_HEART then
-                    if entity.SubType == HeartSubType.HEART_FULL then
+                    if entity.SubType == HeartSubType.HEART_FULL and settings.pickUpRedHearts then
                         if nHearts + 2 <= maxHearts then
                             nHearts = nHearts + 2
                             teleport = true
                         end
                     end
-                    if entity.SubType == HeartSubType.HEART_HALF then
+                    if entity.SubType == HeartSubType.HEART_HALF and settings.pickUpRedHearts then
                         if nHearts + 1 <= maxHearts then
                             nHearts = nHearts + 1
                             teleport = true
                         end
                     end
-                    if entity.SubType == HeartSubType.HEART_DOUBLEPACK then
+                    if entity.SubType == HeartSubType.HEART_DOUBLEPACK and settings.pickUpRedHearts then
                         if nHearts + 4 <= maxHearts then
                             nHearts = nHearts + 4
                             teleport = true
                         end
                     end
-                    if entity.SubType == HeartSubType.HEART_SOUL  then
+                    if entity.SubType == HeartSubType.HEART_SOUL and settings.pickUpSoulHearts then
                         if nSoulHearts + 2 <= (heartLimit - maxHearts) then
                             nSoulHearts = nSoulHearts + 2
                             teleport = true
                         end
                     end
-                    if entity.SubType == HeartSubType.HEART_HALF_SOUL  then
+                    if entity.SubType == HeartSubType.HEART_HALF_SOUL and settings.pickUpSoulHearts then
                         if nSoulHearts + 1 <= (heartLimit - maxHearts) then
                             nSoulHearts = nSoulHearts + 1
                             teleport = true
                         end
                     end
-                    if entity.SubType == HeartSubType.HEART_BLACK then
+                    if entity.SubType == HeartSubType.HEART_BLACK and settings.pickUpSoulHearts then
                         if nSoulHearts + 2 <= (heartLimit - maxHearts) then
                             nSoulHearts = nSoulHearts + 2
                             teleport = true
                         end
                     end
-                elseif entity.Variant == PickupVariant.PICKUP_CHEST and entity.SubType == ChestSubType.CHEST_CLOSED then
+                elseif entity.Variant == PickupVariant.PICKUP_CHEST and entity.SubType == ChestSubType.CHEST_CLOSED and settings.openChests then
                     pickUpEntity:TryOpenChest()
                 end
 
