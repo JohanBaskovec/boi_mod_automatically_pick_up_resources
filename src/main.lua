@@ -260,6 +260,14 @@ local function pickUpResources(player)
         end
         nBombs = player:GetNumBombs()
         nKeys = player:GetNumKeys()
+        nHearts = player:GetHearts()
+        maxHearts = player:GetEffectiveMaxHearts()
+        nSoulHearts = player:GetSoulHearts()
+        heartLimit = player:GetHeartLimit()
+
+        print("hearts" .. nHearts)
+        print("max hearts" .. maxHearts)
+        print(player:GetHeartLimit())
         for i, entity in ipairs(Isaac.GetRoomEntities()) do
             pickUpEntity = entity:ToPickup()
             temporaryEntity.Position = Vector(entity.Position.X, entity.Position.Y)
@@ -320,8 +328,41 @@ local function pickUpResources(player)
                 elseif entity.Variant == PickupVariant.PICKUP_GRAB_BAG or entity.Variant == PickupVariant.PICKUP_PILL or entity.Variant == PickupVariant.PICKUP_TAROTCARD then
                     teleport = true
                 elseif entity.Variant == PickupVariant.PICKUP_HEART then
-                    if entity.SubType == HeartSubType.HEART_FULL or entity.SubType == HeartSubType.HEART_HALF or entity.SubType == HeartSubType.HEART_SOUL or entity.SubType == HeartSubType.HEART_DOUBLEPACK or entity.SubType == HeartSubType.HEART_BLACK then
-                        teleport = true
+                    if entity.SubType == HeartSubType.HEART_FULL then
+                        if nHearts + 2 <= maxHearts then
+                            nHearts = nHearts + 2
+                            teleport = true
+                        end
+                    end
+                    if entity.SubType == HeartSubType.HEART_HALF then
+                        if nHearts + 1 <= maxHearts then
+                            nHearts = nHearts + 1
+                            teleport = true
+                        end
+                    end
+                    if entity.SubType == HeartSubType.HEART_DOUBLEPACK then
+                        if nHearts + 4 <= maxHearts then
+                            nHearts = nHearts + 4
+                            teleport = true
+                        end
+                    end
+                    if entity.SubType == HeartSubType.HEART_SOUL  then
+                        if nSoulHearts + 2 <= (heartLimit - maxHearts) then
+                            nSoulHearts = nSoulHearts + 2
+                            teleport = true
+                        end
+                    end
+                    if entity.SubType == HeartSubType.HEART_HALF_SOUL  then
+                        if nSoulHearts + 1 <= (heartLimit - maxHearts) then
+                            nSoulHearts = nSoulHearts + 1
+                            teleport = true
+                        end
+                    end
+                    if entity.SubType == HeartSubType.HEART_BLACK then
+                        if nSoulHearts + 2 <= (heartLimit - maxHearts) then
+                            nSoulHearts = nSoulHearts + 2
+                            teleport = true
+                        end
                     end
                 elseif entity.Variant == PickupVariant.PICKUP_CHEST and entity.SubType == ChestSubType.CHEST_CLOSED then
                     pickUpEntity:TryOpenChest()
