@@ -254,6 +254,10 @@ local function pickUpResources(player)
 
         entities = room:GetEntities()
         nCoins = player:GetNumCoins()
+        maxCoins = 99
+        if player:HasCollectible(CollectibleType.COLLECTIBLE_DEEP_POCKETS) then
+            maxCoins = 999
+        end
         nBombs = player:GetNumBombs()
         nKeys = player:GetNumKeys()
         for i, entity in ipairs(Isaac.GetRoomEntities()) do
@@ -263,22 +267,22 @@ local function pickUpResources(player)
                 teleport = false
                 if entity.Variant == PickupVariant.PICKUP_COIN then
                     if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_LUCKYPENNY or entity.SubType == CoinSubType.COIN_GOLDEN then
-                        if nCoins < 99 then
+                        if nCoins < maxCoins then
                             nCoins = nCoins + 1
                             teleport = true
                         end
                     elseif entity.SubType == CoinSubType.COIN_DOUBLEPACK then
-                        if nCoins < 98 then
+                        if nCoins < maxCoins - 1 then
                             nCoins = nCoins + 2
                             teleport = true
                         end
                     elseif entity.SubType == CoinSubType.COIN_NICKEL then
-                        if nCoins < 95 then
+                        if nCoins < maxCoins - 4 then
                             nCoins = nCoins + 5
                             teleport = true
                         end
                     elseif entity.SubType == CoinSubType.COIN_DIME then
-                        if nCoins < 90 then
+                        if nCoins < maxCoins - 9 then
                             nCoins = nCoins + 10
                             teleport = true
                         end
