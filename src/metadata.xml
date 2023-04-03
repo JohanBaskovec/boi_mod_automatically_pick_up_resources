@@ -5,18 +5,14 @@
     <id>2955667690</id>
     <description>Instantly pick up items and open unlocked chests in the room with a single keypress. It works by teleporting the items to the player, but only if the items could be reached without taking damage (it won't teleport items behind rocks or spikes).
 
-By default, the pickup of resources is activated by the C key on a keyboard, or Left stick button on an Xbox controller. This can be configured using the mod &quot;Mod Config Menu Pure&quot;.
+By default, the pickup of resources is activated by the C key on a keyboard, or Left stick button on an Xbox controller. You can configure the controls and which items are picked up using the mod &quot;Mod Config Menu Pure&quot; https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787
 
-https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787
-
-These items are teleported:
-- until limit of 99 is reached: penny, double, nickel, dime, lucky and golden coins ; single and double bombs ; single and double keys.
-- always: golden bombs, golden keys, all cards, all pills, all bags, normal hearts, soul hearts, black hearts.
+When picking up items, the mod doesn't waste resources: coins, bombs, keys and hearts are not picked up if the maximum would be exceeded (for example if you have 1/2 heart missing, it won't pick up a full heart). If you enable picking up bombs or keys, golden bombs and golden key  will always be picked up.
 
 It only opens normal unlocked chests, the others are ignored.
 
-All other items are NOT teleported, this includes batteries, charged keys, eternal, bone and rotten hearts.</description>
-    <version>0.6</version>
+All other items are NOT picked up, this includes batteries, charged keys, eternal, bone and rotten hearts.</description>
+    <version>0.7</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
