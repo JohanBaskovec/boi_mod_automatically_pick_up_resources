@@ -76,16 +76,19 @@ end
 
 initializeSettings()
 
+
+local optionsModName = "Pick up resources"
+
 local function setupMyModConfigMenuSettings()
     if ModConfigMenu == nil then
         return
     end
 
     -- Remove menu if it exists, makes debugging easier
-    ModConfigMenu.RemoveCategory(mod.Name)
+    ModConfigMenu.RemoveCategory(optionsModName)
 
     ModConfigMenu.AddSetting(
-            mod.Name,
+            optionsModName,
             nil,
             {
                 Type = ModConfigMenu.OptionType.KEYBIND_KEYBOARD,
@@ -152,7 +155,7 @@ local function setupMyModConfigMenuSettings()
 
     for i = 1, 1 do
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.KEYBIND_CONTROLLER,
@@ -219,7 +222,7 @@ local function setupMyModConfigMenuSettings()
         )
 
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -236,7 +239,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -253,7 +256,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -270,7 +273,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -287,7 +290,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -304,7 +307,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -321,7 +324,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -338,7 +341,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -355,7 +358,7 @@ local function setupMyModConfigMenuSettings()
                 }
         )
         ModConfigMenu.AddSetting(
-                mod.Name,
+                optionsModName,
                 nil,
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
