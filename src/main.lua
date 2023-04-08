@@ -99,8 +99,8 @@ local function setupMyModConfigMenuSettings()
                 end,
                 Default = Keyboard.KEY_C,
                 Display = function()
-                    currentValue = settings.keyboardKey
-                    key = "None"
+                    local currentValue = settings.keyboardKey
+                    local key = "None"
 
                     if currentValue > -1 then
                         key = "Unknown Key"
@@ -165,7 +165,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.controllerButtons[i]
                     end,
                     Display = function()
-                        currentValue = settings.controllerButtons[i]
+                        local currentValue = settings.controllerButtons[i]
                         local key = "None"
 
                         if currentValue > -1 then
@@ -176,8 +176,7 @@ local function setupMyModConfigMenuSettings()
                             end
                         end
 
-                        displayString = "Pick up resources: " .. key .. " (controller)"
-                        return displayString
+                        return "Pick up resources: " .. key .. " (controller)"
                     end,
                     OnChange = function(newValue)
                         if not newValue then
@@ -232,7 +231,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpCoins
                     end,
                     Display = function()
-                        currentValue = settings.pickUpCoins
+                        local currentValue = settings.pickUpCoins
                         return "Pick up coins? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -249,7 +248,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpLuckyPenny
                     end,
                     Display = function()
-                        currentValue = settings.pickUpLuckyPenny
+                        local currentValue = settings.pickUpLuckyPenny
                         return "Pick up lucky pennies? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -266,7 +265,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpKeys
                     end,
                     Display = function()
-                        currentValue = settings.pickUpKeys
+                        local currentValue = settings.pickUpKeys
                         return "Pick up keys? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -283,7 +282,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpGoldenKeys
                     end,
                     Display = function()
-                        currentValue = settings.pickUpGoldenKeys
+                        local currentValue = settings.pickUpGoldenKeys
                         return "Pick up golden keys? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -300,7 +299,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpBombs
                     end,
                     Display = function()
-                        currentValue = settings.pickUpBombs
+                        local currentValue = settings.pickUpBombs
                         return "Pick up bombs? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -317,7 +316,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpGoldenBombs
                     end,
                     Display = function()
-                        currentValue = settings.pickUpGoldenBombs
+                        local currentValue = settings.pickUpGoldenBombs
                         return "Pick up golden bombs? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -334,7 +333,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpPills
                     end,
                     Display = function()
-                        currentValue = settings.pickUpPills
+                        local currentValue = settings.pickUpPills
                         return "Pick up pills? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -351,7 +350,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpCards
                     end,
                     Display = function()
-                        currentValue = settings.pickUpCards
+                        local currentValue = settings.pickUpCards
                         return "Pick up cards? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -368,7 +367,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpRedHearts
                     end,
                     Display = function()
-                        currentValue = settings.pickUpRedHearts
+                        local currentValue = settings.pickUpRedHearts
                         return "Pick up red hearts? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -385,7 +384,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpSoulHearts
                     end,
                     Display = function()
-                        currentValue = settings.pickUpSoulHearts
+                        local currentValue = settings.pickUpSoulHearts
                         return "Pick up soul hearts? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -402,7 +401,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.pickUpBags
                     end,
                     Display = function()
-                        currentValue = settings.pickUpBags
+                        local currentValue = settings.pickUpBags
                         return "Pick up bags? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -419,7 +418,7 @@ local function setupMyModConfigMenuSettings()
                         return settings.openChests
                     end,
                     Display = function()
-                        currentValue = settings.openChests
+                        local currentValue = settings.openChests
                         return "Open unlocked chests? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
@@ -434,7 +433,6 @@ setupMyModConfigMenuSettings()
 
 local buttonsPressedLast = false
 local buttonsPressed = false
-local BUTTON_STICK_LEFT = 10
 
 local function pickUpResources(player)
     local controllerIndex = player.ControllerIndex
@@ -444,7 +442,7 @@ local function pickUpResources(player)
 
     local controllerButtonsPressed = true
     for i = 1, 1 do
-        controllerButtonPressed = settings.controllerButtons[i] == -1 or Input.IsButtonPressed(settings.controllerButtons[i], controllerIndex)
+        local controllerButtonPressed = settings.controllerButtons[i] == -1 or Input.IsButtonPressed(settings.controllerButtons[i], controllerIndex)
         if not controllerButtonPressed then
             controllerButtonsPressed = false
         end
@@ -467,8 +465,8 @@ local function pickUpResources(player)
     if room:IsClear() then
         -- We spawn a temporary NPC in order to use its PathFinder, and remove it when we don't need it anymore
         -- We use the PathFinder to check if the player can reach the item.
-        entityType = EntityType.ENTITY_MAGGOT
-        temporaryEntity = Game():Spawn(
+        local entityType = EntityType.ENTITY_MAGGOT
+        local temporaryEntity = Game():Spawn(
                 entityType, -- Type
                 0, -- Variant
                 player.Position, -- Position
@@ -478,7 +476,6 @@ local function pickUpResources(player)
                 Game():GetRoom():GetSpawnSeed() -- Seed (the "GetSpawnSeed()" function gets a reproducible seed based on the room, e.g. "2496979501")
         )                       :ToNPC()
 
-        local entities = room:GetEntities()
         local nCoins = player:GetNumCoins()
         local maxCoins = 99
         if player:HasCollectible(CollectibleType.COLLECTIBLE_DEEP_POCKETS) then
@@ -495,7 +492,7 @@ local function pickUpResources(player)
             local pickUpEntity = entity:ToPickup()
             temporaryEntity.Position = Vector(entity.Position.X, entity.Position.Y)
             if pickUpEntity ~= nil and (not pickUpEntity:IsShopItem()) and (temporaryEntity.Pathfinder:HasPathToPos(player.Position, true) or player.CanFly) then
-                teleport = false
+                local teleport = false
                 if entity.Variant == PickupVariant.PICKUP_COIN then
                     if settings.pickUpCoins then
                         if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_GOLDEN and nCoins < maxCoins then
@@ -603,7 +600,7 @@ end
 local function onPostUpdate()
     local nPlayers = Game():GetNumPlayers()
     for i = 0, nPlayers do
-        player = Game():GetPlayer(i)
+        local player = Game():GetPlayer(i)
         pickUpResources(player)
     end
 end
