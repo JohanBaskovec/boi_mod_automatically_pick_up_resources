@@ -12,7 +12,7 @@ When picking up items, the mod doesn't waste resources: coins, bombs, keys and h
 It only opens normal unlocked chests, the others are ignored.
 
 All other items are NOT picked up, this includes batteries, charged keys, eternal, bone and rotten hearts.</description>
-    <version>0.9</version>
+    <version>0.10</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
