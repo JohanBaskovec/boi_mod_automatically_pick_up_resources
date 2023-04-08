@@ -51,10 +51,8 @@ local function loadSettings()
     if settings.keyboardKey < -1 or settings.keyboardKey > 348 then
         error("Invalid keyboard key")
     end
-    for i = 1, 1 do
-        if settings.controllerButtons[i] == nil or settings.controllerButtons[i] < -1 or settings.controllerButtons[i] > 15 then
-            error("Invalid controllerButton0")
-        end
+    if settings.controllerButtons[1] == nil or settings.controllerButtons[1] < -1 or settings.controllerButtons[1] > 15 then
+        error("Invalid controllerButton0")
     end
 
     -- newly added settings are set to default value
@@ -155,278 +153,276 @@ local function setupMyModConfigMenuSettings()
             }
     )
 
-    for i = 1, 1 do
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.KEYBIND_CONTROLLER,
-                    CurrentSetting = function()
-                        return settings.controllerButtons[i]
-                    end,
-                    Display = function()
-                        local currentValue = settings.controllerButtons[i]
-                        local key = "None"
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.KEYBIND_CONTROLLER,
+                CurrentSetting = function()
+                    return settings.controllerButtons[1]
+                end,
+                Display = function()
+                    local currentValue = settings.controllerButtons[1]
+                    local key = "None"
 
-                        if currentValue > -1 then
-                            key = "Unknown Button"
+                    if currentValue > -1 then
+                        key = "Unknown Button"
 
-                            if InputHelper.ControllerToString[currentValue] then
-                                key = InputHelper.ControllerToString[currentValue]
-                            end
+                        if InputHelper.ControllerToString[currentValue] then
+                            key = InputHelper.ControllerToString[currentValue]
                         end
-
-                        return "Pick up resources: " .. key .. " (controller)"
-                    end,
-                    OnChange = function(newValue)
-                        if not newValue then
-                            newValue = -1
-                        end
-                        settings.controllerButtons[i] = newValue
-                    end,
-                    Info = {
-                        "The first controller button to pick up resources in the room",
-                    },
-                    PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL,
-                    PopupWidth = 280,
-                    Popup = function()
-                        local currentValue = settings.controllerButtons[i]
-
-                        local goBackString = "back"
-                        if ModConfigMenu.Config.LastBackPressed then
-                            if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
-                                goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
-                            elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
-                                goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
-                            end
-                        end
-
-                        local keepSettingString = ""
-                        if currentValue > -1 then
-                            local currentSettingString = 'unknown'
-                            if (InputHelper.ControllerToString[currentValue]) then
-                                currentSettingString = InputHelper.ControllerToString[currentValue]
-                            end
-
-                            keepSettingString = "This setting is currently set to \"" ..
-                                    currentSettingString .. "\".$newlinePress this button to keep it unchanged.$newline$newline"
-                        end
-
-                        local deviceString = "controller"
-
-                        return "Press a button on your " ..
-                                deviceString ..
-                                " to change this setting.$newline$newline" ..
-                                keepSettingString .. "Press \"" .. goBackString .. "\" to go back and clear this setting."
                     end
-                }
-        )
 
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpCoins
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpCoins
-                        return "Pick up coins? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpCoins = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpLuckyPenny
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpLuckyPenny
-                        return "Pick up lucky pennies? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpLuckyPenny = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpKeys
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpKeys
-                        return "Pick up keys? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpKeys = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpGoldenKeys
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpGoldenKeys
-                        return "Pick up golden keys? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpGoldenKeys = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpBombs
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpBombs
-                        return "Pick up bombs? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpBombs = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpGoldenBombs
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpGoldenBombs
-                        return "Pick up golden bombs? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpGoldenBombs = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpPills
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpPills
-                        return "Pick up pills? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpPills = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpCards
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpCards
-                        return "Pick up cards? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpCards = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpRedHearts
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpRedHearts
-                        return "Pick up red hearts? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpRedHearts = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpSoulHearts
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpSoulHearts
-                        return "Pick up soul hearts? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpSoulHearts = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.pickUpBags
-                    end,
-                    Display = function()
-                        local currentValue = settings.pickUpBags
-                        return "Pick up bags? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.pickUpBags = newValue
-                    end,
-                }
-        )
-        ModConfigMenu.AddSetting(
-                optionsModName,
-                nil,
-                {
-                    Type = ModConfigMenu.OptionType.BOOLEAN,
-                    CurrentSetting = function()
-                        return settings.openChests
-                    end,
-                    Display = function()
-                        local currentValue = settings.openChests
-                        return "Open unlocked chests? " .. tostring(currentValue)
-                    end,
-                    OnChange = function(newValue)
-                        settings.openChests = newValue
-                    end,
-                }
-        )
-    end
+                    return "Pick up resources: " .. key .. " (controller)"
+                end,
+                OnChange = function(newValue)
+                    if not newValue then
+                        newValue = -1
+                    end
+                    settings.controllerButtons[1] = newValue
+                end,
+                Info = {
+                    "The first controller button to pick up resources in the room",
+                },
+                PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL,
+                PopupWidth = 280,
+                Popup = function()
+                    local currentValue = settings.controllerButtons[1]
+
+                    local goBackString = "back"
+                    if ModConfigMenu.Config.LastBackPressed then
+                        if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
+                            goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
+                        elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
+                            goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
+                        end
+                    end
+
+                    local keepSettingString = ""
+                    if currentValue > -1 then
+                        local currentSettingString = 'unknown'
+                        if (InputHelper.ControllerToString[currentValue]) then
+                            currentSettingString = InputHelper.ControllerToString[currentValue]
+                        end
+
+                        keepSettingString = "This setting is currently set to \"" ..
+                                currentSettingString .. "\".$newlinePress this button to keep it unchanged.$newline$newline"
+                    end
+
+                    local deviceString = "controller"
+
+                    return "Press a button on your " ..
+                            deviceString ..
+                            " to change this setting.$newline$newline" ..
+                            keepSettingString .. "Press \"" .. goBackString .. "\" to go back and clear this setting."
+                end
+            }
+    )
+
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpCoins
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpCoins
+                    return "Pick up coins? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpCoins = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpLuckyPenny
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpLuckyPenny
+                    return "Pick up lucky pennies? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpLuckyPenny = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpKeys
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpKeys
+                    return "Pick up keys? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpKeys = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpGoldenKeys
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpGoldenKeys
+                    return "Pick up golden keys? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpGoldenKeys = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpBombs
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpBombs
+                    return "Pick up bombs? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpBombs = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpGoldenBombs
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpGoldenBombs
+                    return "Pick up golden bombs? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpGoldenBombs = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpPills
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpPills
+                    return "Pick up pills? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpPills = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpCards
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpCards
+                    return "Pick up cards? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpCards = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpRedHearts
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpRedHearts
+                    return "Pick up red hearts? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpRedHearts = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpSoulHearts
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpSoulHearts
+                    return "Pick up soul hearts? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpSoulHearts = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.pickUpBags
+                end,
+                Display = function()
+                    local currentValue = settings.pickUpBags
+                    return "Pick up bags? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.pickUpBags = newValue
+                end,
+            }
+    )
+    ModConfigMenu.AddSetting(
+            optionsModName,
+            nil,
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return settings.openChests
+                end,
+                Display = function()
+                    local currentValue = settings.openChests
+                    return "Open unlocked chests? " .. tostring(currentValue)
+                end,
+                OnChange = function(newValue)
+                    settings.openChests = newValue
+                end,
+            }
+    )
 end
 
 setupMyModConfigMenuSettings()
@@ -440,14 +436,8 @@ local function pickUpResources(player)
     -- Player must release the buttons and press them again to do the action
     local keyboardButtonPressed = Input.IsButtonPressed(settings.keyboardKey, controllerIndex)
 
-    local controllerButtonsPressed = true
-    for i = 1, 1 do
-        local controllerButtonPressed = settings.controllerButtons[i] == -1 or Input.IsButtonPressed(settings.controllerButtons[i], controllerIndex)
-        if not controllerButtonPressed then
-            controllerButtonsPressed = false
-        end
-    end
-    buttonsPressed = keyboardButtonPressed or controllerButtonsPressed
+    local controllerButtonPressed = settings.controllerButtons[1] ~= -1 and Input.IsButtonPressed(settings.controllerButtons[1], controllerIndex)
+    buttonsPressed = keyboardButtonPressed or controllerButtonPressed
 
     if not buttonsPressed then
         buttonsPressedLast = false
@@ -474,7 +464,7 @@ local function pickUpResources(player)
                 nil, -- Parent
                 0, -- SubType
                 Game():GetRoom():GetSpawnSeed() -- Seed (the "GetSpawnSeed()" function gets a reproducible seed based on the room, e.g. "2496979501")
-        )                       :ToNPC()
+        )                             :ToNPC()
 
         local nCoins = player:GetNumCoins()
         local maxCoins = 99
