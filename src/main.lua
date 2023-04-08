@@ -24,13 +24,16 @@ local defaultSettings = {
     controllerButtons = { Controller.STICK_LEFT, -1 },
     openChests = true,
     pickUpCoins = true,
+    pickUpLuckyPenny = true,
     pickUpPills = true,
     pickUpCards = true,
     pickUpBombs = true,
     pickUpKeys = true,
     pickUpRedHearts = true,
     pickUpSoulHearts = true,
-    pickUpBags = true
+    pickUpBags = true,
+    pickUpGoldenKeys = true,
+    pickUpGoldenBombs = true
 }
 
 local settings = defaultSettings
@@ -75,7 +78,6 @@ local function initializeSettings()
 end
 
 initializeSettings()
-
 
 local optionsModName = "Pick up resources"
 
@@ -244,14 +246,48 @@ local function setupMyModConfigMenuSettings()
                 {
                     Type = ModConfigMenu.OptionType.BOOLEAN,
                     CurrentSetting = function()
+                        return settings.pickUpLuckyPenny
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpLuckyPenny
+                        return "Pick up lucky pennies? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpLuckyPenny = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                optionsModName,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
                         return settings.pickUpKeys
                     end,
                     Display = function()
                         currentValue = settings.pickUpKeys
-                        return "Pick up keys?" .. tostring(currentValue)
+                        return "Pick up keys? " .. tostring(currentValue)
                     end,
                     OnChange = function(newValue)
                         settings.pickUpKeys = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                optionsModName,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpGoldenKeys
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpGoldenKeys
+                        return "Pick up golden keys? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpGoldenKeys = newValue
                     end,
                 }
         )
@@ -269,6 +305,23 @@ local function setupMyModConfigMenuSettings()
                     end,
                     OnChange = function(newValue)
                         settings.pickUpBombs = newValue
+                    end,
+                }
+        )
+        ModConfigMenu.AddSetting(
+                optionsModName,
+                nil,
+                {
+                    Type = ModConfigMenu.OptionType.BOOLEAN,
+                    CurrentSetting = function()
+                        return settings.pickUpGoldenBombs
+                    end,
+                    Display = function()
+                        currentValue = settings.pickUpGoldenBombs
+                        return "Pick up golden bombs? " .. tostring(currentValue)
+                    end,
+                    OnChange = function(newValue)
+                        settings.pickUpGoldenBombs = newValue
                     end,
                 }
         )
@@ -443,56 +496,52 @@ local function pickUpResources(player)
             temporaryEntity.Position = Vector(entity.Position.X, entity.Position.Y)
             if pickUpEntity ~= nil and (not pickUpEntity:IsShopItem()) and (temporaryEntity.Pathfinder:HasPathToPos(player.Position, true) or player.CanFly) then
                 teleport = false
-                if entity.Variant == PickupVariant.PICKUP_COIN and settings.pickUpCoins then
-                    if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_LUCKYPENNY or entity.SubType == CoinSubType.COIN_GOLDEN then
-                        if nCoins < maxCoins then
+                if entity.Variant == PickupVariant.PICKUP_COIN then
+                    if settings.pickUpCoins then
+                        if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_GOLDEN and nCoins < maxCoins then
                             nCoins = nCoins + 1
                             teleport = true
-                        end
-                    elseif entity.SubType == CoinSubType.COIN_DOUBLEPACK then
-                        if nCoins < maxCoins - 1 then
+                        elseif entity.SubType == CoinSubType.COIN_DOUBLEPACK and nCoins < maxCoins - 1 then
                             nCoins = nCoins + 2
                             teleport = true
-                        end
-                    elseif entity.SubType == CoinSubType.COIN_NICKEL then
-                        if nCoins < maxCoins - 4 then
+                        elseif entity.SubType == CoinSubType.COIN_NICKEL and nCoins < maxCoins - 4 then
                             nCoins = nCoins + 5
                             teleport = true
-                        end
-                    elseif entity.SubType == CoinSubType.COIN_DIME then
-                        if nCoins < maxCoins - 9 then
+                        elseif entity.SubType == CoinSubType.COIN_DIME and nCoins < maxCoins - 9 then
                             nCoins = nCoins + 10
                             teleport = true
                         end
                     end
-                elseif entity.Variant == PickupVariant.PICKUP_BOMB and settings.pickUpBombs then
-                    if entity.SubType == BombSubType.BOMB_NORMAL then
-                        if nBombs < 99 then
+                    if settings.pickUpLuckyPenny and entity.SubType == CoinSubType.COIN_LUCKYPENNY and nCoins < maxCoins then
+                        nCoins = nCoins + 1
+                        teleport = true
+                    end
+                elseif entity.Variant == PickupVariant.PICKUP_BOMB then
+                    if settings.pickUpBombs then
+                        if entity.SubType == BombSubType.BOMB_NORMAL and nBombs < 99 then
                             nBombs = nBombs + 1
                             teleport = true
-                        end
-                    elseif entity.SubType == BombSubType.BOMB_DOUBLEPACK then
-                        if nBombs < 98 then
+                        elseif entity.SubType == BombSubType.BOMB_DOUBLEPACK and nBombs < 98 then
                             nBombs = nBombs + 2
                             teleport = true
                         end
-                    elseif entity.SubType == BombSubType.BOMB_GOLDEN then
+                    end
+                    if entity.SubType == BombSubType.BOMB_GOLDEN and settings.pickUpGoldenBombs then
                         teleport = true
                     end
-                elseif entity.Variant == PickupVariant.PICKUP_KEY and settings.pickUpKeys then
-                    -- ignore charged keys
-                    if entity.SubType == KeySubType.KEY_NORMAL then
-                        if nKeys < 99 then
+                elseif entity.Variant == PickupVariant.PICKUP_KEY then
+                    if settings.pickUpKeys then
+                        -- ignore charged keys
+                        if entity.SubType == KeySubType.KEY_NORMAL and nKeys < 99 then
                             entity.Position = Vector(player.Position.X, player.Position.Y)
                             nKeys = nKeys + 1
                             teleport = true
-                        end
-                    elseif entity.SubType == KeySubType.KEY_DOUBLEPACK then
-                        if nKeys < 98 then
+                        elseif entity.SubType == KeySubType.KEY_DOUBLEPACK and nKeys < 98 then
                             nKeys = nKeys + 2
                             teleport = true
                         end
-                    elseif entity.SubType == KeySubType.KEY_GOLDEN then
+                    end
+                    if settings.pickUpGoldenKeys and entity.SubType == KeySubType.KEY_GOLDEN then
                         teleport = true
                     end
                 elseif entity.Variant == PickupVariant.PICKUP_GRAB_BAG and settings.pickUpBags then
