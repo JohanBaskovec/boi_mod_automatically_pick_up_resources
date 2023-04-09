@@ -485,7 +485,7 @@ local function pickUpResources(player)
                 local teleport = false
                 if entity.Variant == PickupVariant.PICKUP_COIN then
                     if settings.pickUpCoins then
-                        if entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_GOLDEN and nCoins < maxCoins then
+                        if (entity.SubType == CoinSubType.COIN_PENNY or entity.SubType == CoinSubType.COIN_GOLDEN) and nCoins < maxCoins then
                             nCoins = nCoins + 1
                             teleport = true
                         elseif entity.SubType == CoinSubType.COIN_DOUBLEPACK and nCoins < maxCoins - 1 then
