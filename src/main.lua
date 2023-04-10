@@ -75,8 +75,6 @@ local function initializeSettings()
     end
 end
 
-initializeSettings()
-
 local optionsModName = "Pick up resources"
 
 local function setupMyModConfigMenuSettings()
@@ -596,3 +594,4 @@ local function onPostUpdate()
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, onPostUpdate)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, initializeSettings)
